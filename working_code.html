@@ -1,0 +1,135 @@
+<html>
+<head>
+ </head>
+<body id="page">
+ <button id="stoptime" onclick="JavaScript:performTimer()"> Натисни мене:-*</button>
+<div id="timer">
+   00:<div id="seconds">15</div>
+</div> <style>
+ #timer div{
+display: inline;
+}
+#timer{
+font-size: 100px;
+text-align: center;
+color: #015965;
+}
+#page{
+background-color: #5FC0CE;
+}
+#stoptime {
+  display: inline-block;
+  width: 15em;
+  font-size: 80%;
+  color: rgba(255,255,255,.9);
+  text-shadow: #2e7ebd 0 1px 2px;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.1;
+  white-space: pre-line;
+  padding: .7em 0;
+  border: 1px solid;
+  border-color: #60a3d8 #2970a9 #2970a9 #60a3d8;
+  border-radius: 6px;
+  outline: none;
+  background: #60a3d8 linear-gradient(#89bbe2, #60a3d8 50%, #378bce);
+  box-shadow: inset rgba(255,255,255,.5) 1px 1px;
+}
+#stoptime:first-line{
+  font-size: 170%;
+  font-weight: 700;
+}
+#stoptime:hover {
+  color: rgb(255,255,255);
+  background-image: linear-gradient(#9dc7e7, #74afdd 50%, #378bce);
+}
+#stoptime:active {
+  color: rgb(255,255,255);
+  border-color: #2970a9;
+  background-image: linear-gradient(#5796c8, #6aa2ce);
+  box-shadow: none;
+}
+</style>
+
+  <script>	 
+  	     var time=document.getElementById('seconds').innerHTML;
+		 var timeNumber;
+		 var intervalid;
+
+  	   function timer(timerFunction){
+  	   		intervalid=setInterval(
+  	   		timerFunction,
+  	   		1000
+  	   		);
+  	   		
+  	 	} 
+  		function getNumber(){
+  	 		timeNumber=parseInt(time,10);
+  	 		}
+
+  	   function performTimer(){
+  	   		returnColors();
+  	   		clearInterval(intervalid);
+  	   		getNumber();
+  	   		timer(function(){
+  	   			diclineTime();
+  	 		});
+  	 		
+  	 		if (timeNumber==0){
+				document.getElementById('seconds').innerHTML=time;
+
+				};	
+  		}
+  		function changeColors(){
+   				document.getElementById('page').style.backgroundColor = '#015965';
+  				document.getElementById('timer').style.color = '#5FC0CE';
+  			
+		}
+		function returnColors(){
+   				document.getElementById('page').style.backgroundColor = '#5FC0CE';
+  				document.getElementById('timer').style.color = '#015965';
+  			
+		}
+		function diclineTime(){
+			timeNumber--;
+			if (timeNumber<0){
+				return false;
+			};
+
+			if (timeNumber<10){
+				timeNumber="0"+timeNumber;
+			};
+			
+			if (timeNumber<6 & timeNumber>0){
+				sound();
+			};
+			if (timeNumber==5){
+  	 			changeColors();
+  	 		};
+			if (timeNumber==0){
+				sound(1500,500,"sine");
+			};
+			document.getElementById('seconds').innerHTML=timeNumber;
+			
+		}
+			function sound(time, frequency, type){
+				var context = window.audioctx || (window.audioctx = new AudioContext());
+				var o = context.createOscillator();
+				o.type = type || "sine";
+				o.connect(context.destination);
+				o.frequency.value=frequency || 500;
+				o.start();
+				setTimeout(function(){o.stop();}, time || 200);
+		}
+
+
+		
+			
+		
+		
+    </script>  
+
+
+ </body>
+</html>
+
