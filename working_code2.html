@@ -1,0 +1,125 @@
+<html>
+<head>
+ </head>
+<body id="page">
+<div id="timer">
+  <div id='minutes'>00</div>:<div id="seconds">00</div>
+</div> <style>
+ #timer div{
+display: inline;
+}
+#timer{
+font-size: 100px;
+text-align: center;
+color: #015965;
+}
+#page{
+background-color: #5FC0CE;
+}
+</style>
+
+  <script>	 
+  	           
+		  var timeNumber;
+      var numberSeconds;
+      var numberMinutes;
+		 
+
+  	   function timer(timerFunction){
+  	   		setInterval(
+  	   		timerFunction,
+  	   		1000
+  	   		);
+  	  	} 
+
+  		function getNumbers(){
+  	 		var time;
+        var regex=/\\?time=(\d{1,3})/i;      // Льоша, ну як тобі наш код?))
+        var query = window.location.search;
+         if (regex.test(query)) {
+            var qs=regex.exec(query);
+            time=qs[1];
+            time=parseInt(time,10);}
+            else {
+              alert('Льоша, введи, будь ласка, в рядку адреси після .html вираз ?time= та кількість секунд, яка менша або дорівнює 100:-*');
+              throw "stop";
+        };
+              
+        if (time>100) {
+          alert ("Льоша, йолки-палки! Що ти робиш!))) Введи, будь ласка, після ?time= число (query string value), яке менше або дорівнює 100.");
+           throw "stop";
+        };
+            
+        numberMinutes=Math.floor(time/60);
+        numberSeconds=(time-numberMinutes*60)+1;
+        timeNumber=numberSeconds;
+          	                 }
+
+  	   function performTimer(){
+  	   		getNumbers();
+  	   		timer(function(){
+  	   			diclineTime();
+  	 		});
+    		}
+
+  		function changeColors(){
+   				document.getElementById('page').style.backgroundColor = '#015965';
+  				document.getElementById('timer').style.color = '#5FC0CE';
+  			
+		}
+		
+		function diclineTime(){
+           timeNumber--;
+			if (timeNumber<0){
+        if (numberMinutes>0){
+          timeNumber=59;
+          numberMinutes=numberMinutes-1;}
+          else {return false;}
+        };
+				
+			if (timeNumber<10){
+				timeNumber="0"+timeNumber;
+			};
+			
+			if (timeNumber<6 & timeNumber>0){
+        if (numberMinutes==0){
+				sound();
+			}
+      };
+			if (timeNumber==5){
+        if (numberMinutes==0){
+  	 			changeColors();
+        }
+  	 		};
+			if (timeNumber==0){
+        if (numberMinutes==0){
+				sound(1500);
+      	}
+      };
+     
+      document.getElementById('minutes').innerHTML='0'+numberMinutes;
+			document.getElementById('seconds').innerHTML=timeNumber;
+			
+		}
+			function sound(time, frequency, type){
+				var context = window.audioctx || (window.audioctx = new AudioContext());
+				var o = context.createOscillator();
+				o.type = type || "sine";
+				o.connect(context.destination);
+				o.frequency.value=frequency || 500;
+				o.start();
+				setTimeout(function(){o.stop();}, time || 200);
+		}
+
+      performTimer();
+
+		
+			
+		
+		
+    </script>  
+
+
+ </body>
+</html>
+
