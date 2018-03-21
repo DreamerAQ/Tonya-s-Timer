@@ -1,0 +1,240 @@
+<html>
+<head>
+ </head>
+<body id="page">
+<div id="timer">
+  <div id='minutes'>00</div>:<div id="seconds">00</div>:<div id="miliseconds">0</div>
+</div> 
+<p>Льоша, леве, для запуску таймера натисни на мою кнопочку</p>
+<button id="stoptime" onclick="JavaScript:performTimer(80)">1 хв 20 сек</button>
+<button id="stoptime" onclick="JavaScript:performTimer(120)">2 хв</button>
+<button id="stoptime" onclick="JavaScript:performTimer(180)">3 хв</button>
+<p>Або введи кількість секунд на свій смак:</p>
+
+<input id="mySeconds" value="30">
+<button id="defineTime" onclick="JavaScript:performTimer(mySeconds.value)">Cтарт</button>
+
+<style>
+ #timer div{
+display: inline;
+}
+#timer{
+font-size: 100px;
+text-align: center;
+color: #015965;
+}
+#page{
+background-color: #5FC0CE;
+}
+input {
+  font-size:30px;
+  width:60px;
+  text-align:right;
+  padding:5px;
+  background-color:#015965;
+  color:#5FC0CE;
+  font-weight:bold;
+}
+#defineTime{
+ width:120px;
+  font-size:30px;
+  padding:5px;
+}
+#stoptime {
+  display: inline-block;
+  width: 15em;
+  font-size: 80%;
+  color: rgba(255,255,255,.9);
+  text-shadow: #2e7ebd 0 1px 2px;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.1;
+  white-space: pre-line;
+  padding: .7em 0;
+  border: 1px solid;
+  border-color: #60a3d8 #2970a9 #2970a9 #60a3d8;
+  border-radius: 6px;
+  outline: none;
+  background: #60a3d8 linear-gradient(#89bbe2, #60a3d8 50%, #378bce);
+  box-shadow: inset rgba(255,255,255,.5) 1px 1px;
+
+}
+#stoptime:first-line{
+  font-size: 170%;
+  font-weight: 700;
+}
+#stoptime:hover {
+  color: rgb(255,255,255);
+  background-image: linear-gradient(#9dc7e7, #74afdd 50%, #378bce);
+}
+#stoptime:active {
+  color: rgb(255,255,255);
+  border-color: #2970a9;
+  background-image: linear-gradient(#5796c8, #6aa2ce);
+  box-shadow: none;
+</style>
+
+  <script>	 
+// ReturnsANumberWhenQueryStringTimeIs0_100();
+// ThrowsStopWhenQueryStringTimeGreaterThan100();
+// ThrowsStopWhenQueryStringTimeIsNaN();
+
+var timeNumber;
+var numberSeconds;
+var numberMinutes;
+var intervalid1;
+var intervalid2;
+var numberMS;
+
+function timer(timerFunction) {
+    intervalid1=setInterval(
+        timerFunction,
+        1000
+    );
+}
+
+
+function performTimer(time) {
+    clearInterval(intervalid1);
+    returnColors();
+    getNumbers();
+    function getNumbers() {
+    numberMinutes = Math.floor(time / 60);
+    numberSeconds = (time - numberMinutes * 60) + 1;
+    timeNumber = numberSeconds;
+}
+    timer(function() {
+        diclineTime();
+    });
+}
+
+function changeColors(){
+          document.getElementById('page').style.backgroundColor = '#015965';
+          document.getElementById('timer').style.color = '#5FC0CE';
+        
+    }
+    function returnColors(){
+          document.getElementById('page').style.backgroundColor = '#5FC0CE';
+          document.getElementById('timer').style.color = '#015965';
+        
+    }
+
+function diclineTime() {
+    timeNumber--;
+    if (timeNumber < 0) {
+        if (numberMinutes > 0) {
+            timeNumber = 59;
+            numberMinutes = numberMinutes - 1;
+        } else {
+            return false;
+        }
+    };
+
+    if (timeNumber < 10) {
+        timeNumber = "0" + timeNumber;
+    };
+
+    if (timeNumber < 6 & timeNumber > 0) {
+        if (numberMinutes == 0) {
+            sound();
+        }
+    };
+    if (timeNumber == 5) {
+        if (numberMinutes == 0) {
+            changeColors();
+        }
+    };
+    if (timeNumber == 0 & numberMinutes == 0) {
+          sound(1500);
+    };
+
+    document.getElementById('minutes').innerHTML = '0' + numberMinutes;
+    document.getElementById('seconds').innerHTML = timeNumber;
+    clearInterval(intervalid2);
+    milisecTimer(function(){diclineMS();});
+
+}
+
+function sound(time, frequency, type) {
+    var context = window.audioctx || (window.audioctx = new AudioContext());
+    var o = context.createOscillator();
+    o.type = type || "sine";
+    o.connect(context.destination);
+    o.frequency.value = frequency || 500;
+    o.start();
+    setTimeout(function() {
+        o.stop(); 
+        if (time==1500){
+        window.location="https://www.youtube.com/watch?v=pZ12_E5R3qc?rel=0;&autoplay=1";
+       
+       };
+    }, time || 200);
+
+}
+// performTimer();
+
+
+  function diclineMS(){
+    numberMS--;
+    if (numberMS<0){
+      return false;
+    };
+    document.getElementById("miliseconds").innerHTML=numberMS;
+  }
+
+  function milisecTimer(messageFunction){
+    numberMS=10;
+    intervalid2=setInterval(
+      messageFunction,
+      100
+      );
+  }
+
+
+/*function ReturnsANumberWhenQueryStringTimeIs0_100() {
+    try {
+        var result = getNumbers("file:///C:/Users/U/Javascript/working_code2.html?time=46");
+        if (result == 47) {
+            return console.log("ReturnsANumberWhenQueryStringTimeIs0_100 passed");
+        }
+       return console.log("ReturnsANumberWhenQueryStringTimeIs0_100 failed Actual:" + result + ",Expected:46");
+    }
+    catch (e) {
+        console.log("ReturnsANumberWhenQueryStringTimeIs0_100 failed, Exception:" + e);
+    }
+}
+
+function ThrowsStopWhenQueryStringTimeGreaterThan100() {
+    try {
+        var result = getNumbers("file:///C:/Users/U/Javascript/working_code2.html?time=146");
+        return console.log("ThrowsStopWhenQueryStringTimeGreaterThan100 failed, Actual :" + result + ",Expected exception stop");
+    } catch (e) {
+        if (e == 'stop') {
+            return console.log("ThrowsStopWhenQueryStringTimeGreaterThan100 passed");
+        } else {
+            return console.log("ThrowsStopWhenQueryStringTimeGreaterThan100 failed, Exception:" + e);
+        }
+    }
+}
+
+function ThrowsStopWhenQueryStringTimeIsNaN() {
+    try {
+        var result = getNumbers("file:///C:/Users/U/Javascript/working_code2.html?time=abc");
+        return console.log("ThrowsStopWhenQueryStringTimeGreaterThan100 failed, Actual :" + result + ",Expected exception stop");
+    } catch (e) {
+        if (e == 'stop') {
+            return console.log("ThrowsStopWhenQueryStringTimeGreaterThan100 passed");
+        } else {
+            return console.log("ThrowsStopWhenQueryStringTimeGreaterThan100 failed, Exception:" + e);
+        }
+    }
+}*/
+			
+		
+		
+    </script>  
+
+
+ </body>
+</html>
+
