@@ -1,0 +1,13 @@
+function diclineTime(timeNumber);
+function ReturnsFalseWhenTimeNumberLessThan0AndNumberMinutesLessThan1(){
+	try{
+		var result=diclineTime(0);
+		if (result==false){
+		return console.log("ReturnsFalseWhenTimeNumberLessThan0AndNumberMinutesLessThan1 passed");
+		}
+		return console.log("ReturnsFalseWhenTimeNumberLessThan0AndNumberMinutesLessThan1 failed Actual:"+result+",Expected:false");
+	}
+	catch(e){
+	console.log("ReturnsFalseWhenTimeNumberLessThan0AndNumberMinutesLessThan1 failed, Exception:"+e);
+	}
+}
