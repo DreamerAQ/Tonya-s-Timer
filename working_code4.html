@@ -5,11 +5,11 @@
 <div id="timer">
   <div id='minutes'>00</div>:<div id="seconds">00</div>:<div id="miliseconds">0</div>
 </div> 
-<p>Льоша, леве, для запуску таймера натисни на мою кнопочку</p>
-<button id="stoptime" onclick="JavaScript:performTimer(80)">1 хв 20 сек</button>
+<p>Для запуску таймера натисніть на кнопочку</p>
+<button id="stoptime" onclick="JavaScript:performTimer(80);">1 хв 20 сек</button>
 <button id="stoptime" onclick="JavaScript:performTimer(120)">2 хв</button>
 <button id="stoptime" onclick="JavaScript:performTimer(180)">3 хв</button>
-<p>Або введи кількість секунд на свій смак:</p>
+<p>Або введіть кількість секунд на свій смак:</p>
 
 <input id="mySeconds" value="30">
 <button id="defineTime" onclick="JavaScript:performTimer(mySeconds.value)">Cтарт</button>
@@ -79,12 +79,14 @@ input {
 // ThrowsStopWhenQueryStringTimeGreaterThan100();
 // ThrowsStopWhenQueryStringTimeIsNaN();
 
-var timeNumber;
-var numberSeconds;
-var numberMinutes;
-var intervalid1;
-var intervalid2;
-var numberMS;
+var timeNumber; initialiazes global variable timeNumber //it is the number of seconds we see in the browser
+var numberSeconds; initialiazes global variable numberSeconds //it is the number of miliseconds we see in the browser
+var numberMinutes; initialiazes global variable numberMinutes //it is the number of miliseconds we see in the browser
+var intervalid1; initialiazes global variable intervalid1 //it holds return of the function 'setInterval' for minutes,
+  //it helps to stop the function call)
+var intervalid2;//it holds return of the function 'setInterval' for miliseconds,
+  //it helps to stop the function call)
+var numberMS;//it is the number of miliseconds we see in the browser
 
 function timer(timerFunction) {
     intervalid1=setInterval(
@@ -94,25 +96,50 @@ function timer(timerFunction) {
 }
 
 
-function performTimer(time) {
-    clearInterval(intervalid1);
-    returnColors();
-    getNumbers();
-    function getNumbers() {
-    numberMinutes = Math.floor(time / 60);
-    numberSeconds = (time - numberMinutes * 60) + 1;
-    timeNumber = numberSeconds;
+
+function performTimer(input) {
+    clearInterval(intervalid1);  //1. stops 'setInterval' function callback (it enables to start the work of timer from the start)
+    returnColors();              //2. calls function 'returnColor' (it enables to set default styles)
+    getNumbers();                //3. calls function 'getNumbers' to set value of variables numberMinutes, numberSeconds and timeNumber before timer starts
+    function getNumbers() {      //4. describes of function getNumbers with parameter 'input'
+    var time;                     //initializes variable 'time'          
+    var query;                   //initializes variable 'query'
+    var regex = /\\?time=(\d{1,3})/i; //sets regex expression (to check query string)
+    var inputType=typeof input;       //gets type value of the input
+    if (inputType=="number"){         //checks the type of input: if the type is number, it sets variable 'time' equal input value
+      time=input;                                               
+    }                                                          
+    else if (inputType=="string"){                            //if the type is string, it converts 'output' value into number (decimal)      
+        time=parseInt(input,10);                                  
+    }                                                             
+    else {
+    var urlString = decodeURIComponent(input);   // if the type is object(url), it converts 'url' into string due to 'decodeURIComponent' function
+    var queryArray = urlString.split('html');    //it splits url as string (variable urlString) to create two strings (the 'html' part disappears)               
+    query = queryArray[1];                       //in the consequence of spliting creates array 'queryArray', which has two elements
+                                                   //sets the variable 'query' equel value of the second 'queryArray' element 
+    if (regex.test(query)) {                    //checks if string of variable 'query' matches regex expriession
+        var qs = regex.exec(query);             // if test passed, it exerts value of querystring and put it in the second elenment of array 'qs'
+        time = qs[1];                             //then converts value of querystring from string to number type (decimal)
+        time = parseInt(time, 10);}              //if test failed make exception 'throw' with value stop
+        else {
+      throw "stop";
+    }
+      };
+   numberMinutes = Math.floor(time / 60);        // sets variable 'numberMinutes' equel result of expression calculation onrounddowned  to integer
+    numberSeconds = (time - numberMinutes * 60) + 1; //sets 'numberSeconds' variable equel result of expression calculation
+    timeNumber = numberSeconds;                       //sets variable 'timeNumber' equel 'numberSeconds' value
 }
-    timer(function() {
+    timer(function() {                          //calls function timer with the parameter 'function diclineTime'
         diclineTime();
     });
 }
-
+/*1.changes background-color of body element from #5FC0CE to #015965
+2.changes color of timer's font from #5FC0CE to #015965*/
 function changeColors(){
           document.getElementById('page').style.backgroundColor = '#015965';
           document.getElementById('timer').style.color = '#5FC0CE';
-        
-    }
+/*1.resets background-color of body element to default (in css styles)
+2.resets background-color of body element to default (in css styles)*/    }
     function returnColors(){
           document.getElementById('page').style.backgroundColor = '#5FC0CE';
           document.getElementById('timer').style.color = '#015965';
@@ -120,38 +147,38 @@ function changeColors(){
     }
 
 function diclineTime() {
-    timeNumber--;
-    if (timeNumber < 0) {
-        if (numberMinutes > 0) {
-            timeNumber = 59;
-            numberMinutes = numberMinutes - 1;
-        } else {
+    timeNumber--;                //diclines value of timeNumber on one
+    if (timeNumber < 0) {        //checks whether timeNumber value is less than zero
+        if (numberMinutes > 0) { //if yes, it checks whether numberMinutes value is more than zero
+            timeNumber = 59;     //if yes, it sets timeNumber value equal 59 and diclines value of numberMinutes on one
+            numberMinutes--; 
+        } else {                  //if timeNumber value is less than zero and numberMinutes value is less than one, it return 'false'
             return false;
         }
     };
 
-    if (timeNumber < 10) {
-        timeNumber = "0" + timeNumber;
+    if (timeNumber < 10) {             //checks whether timeNumber value is less than ten
+        timeNumber = "0" + timeNumber;  // if yes, it creates string "0timeNumber"
     };
 
-    if (timeNumber < 6 & timeNumber > 0) {
-        if (numberMinutes == 0) {
-            sound();
+    if (timeNumber < 6 & timeNumber > 0) {  //checks whether timeNumber value is less than six and more than zero
+        if (numberMinutes == 0) {           //if yes, it checks whether numberMinutes is equal zero
+            sound();                        //if yes, it calls function 'sound' with default parameters
         }
     };
-    if (timeNumber == 5) {
-        if (numberMinutes == 0) {
-            changeColors();
+    if (timeNumber == 5) {                 //checks whether timeNumber value is equal five
+        if (numberMinutes == 0) {          //if yes, it checks whether numberMinutes value is equal zero
+            changeColors();                //if yes, it calls function 'changeColors
         }
     };
-    if (timeNumber == 0 & numberMinutes == 0) {
-          sound(1500);
+    if (timeNumber == 0 & numberMinutes == 0) {  //it checks whether timeNumber value is equal zero and numberMinutes value is equal zero simultaneously
+          sound(1500);                           //if yes, it calls function 'sound' with time parameter (duration) 1500 miliseconds
     };
 
-    document.getElementById('minutes').innerHTML = '0' + numberMinutes;
-    document.getElementById('seconds').innerHTML = timeNumber;
-    clearInterval(intervalid2);
-    milisecTimer(function(){diclineMS();});
+    document.getElementById('minutes').innerHTML = '0' + numberMinutes; //it sets value "0numberMinutes" of DOM element with id 'minutes'
+    document.getElementById('seconds').innerHTML = timeNumber;          //it sets value "timeNumber" of DOM element with id 'minutes'
+    clearInterval(intervalid2);                                        //stops setInterval function by clearing timerid 'intervalid2' (miliseconds timer)
+    milisecTimer(function(){diclineMS();});                            //launches miliseconds timer by calling diclineMS function
 
 }
 
@@ -162,8 +189,8 @@ function sound(time, frequency, type) {
     o.connect(context.destination);
     o.frequency.value = frequency || 500;
     o.start();
-    setTimeout(function() {
-        o.stop(); 
+    setTimeout(function() {       //calls function 'setTimeout' with parameter 'stop' function and 'time' (default value is '200'), then checks whether valuable 'time' is 'equal 1500
+        o.stop();                 // if yes, new window opens with autoplay youtube video
         if (time==1500){
         window.location="https://www.youtube.com/watch?v=pZ12_E5R3qc?rel=0;&autoplay=1";
        
@@ -171,19 +198,19 @@ function sound(time, frequency, type) {
     }, time || 200);
 
 }
-// performTimer();
+performTimer(window.location);  
 
 
   function diclineMS(){
-    numberMS--;
-    if (numberMS<0){
-      return false;
+    numberMS--;             //diclines numberMS value on one
+    if (numberMS<0){        //checks if numberMS vakue is less than zero
+      return false;         //if yes it returns 'false' (to stop miliseconds timer when it displays in browser '0')
     };
-    document.getElementById("miliseconds").innerHTML=numberMS;
+    document.getElementById("miliseconds").innerHTML=numberMS; //it sets value "numberMS" of DOM element with id 'miliseconds'
   }
 
-  function milisecTimer(messageFunction){
-    numberMS=10;
+  function milisecTimer(messageFunction){   
+    numberMS=10;                           
     intervalid2=setInterval(
       messageFunction,
       100
