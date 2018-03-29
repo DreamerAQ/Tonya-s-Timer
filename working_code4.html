@@ -98,9 +98,10 @@ function getAndShowNewMinutesAndSecondsWithInterval(timerFunction) {
 
 
 //starts timer
-function startTimer(input) {
+function setColorsgetNumbersAndShowThem(input) {
     clearInterval(intervalid1);  
-    setInitialColors();               
+    setInitialColors();   
+    getNumbersOfMinutesAndSeconds();            
     function getNumbersOfMinutesAndSeconds() {      //1. crunches user's request of time - clears it from unnecessary symbols   
     var time;                                       //2. transforms it into number of seconds  
     var query;                                      //3. gets number of minutes
@@ -179,7 +180,7 @@ function getNewNumberOfMinutesAndSecondsDiclinedOnOneAndShowIt() {
     document.getElementById('minutes').innerHTML = '0' + numberMinutes; 
     document.getElementById('seconds').innerHTML = timeNumber;          
     clearInterval(intervalid2);                                        
-    setIntervalToGetAndShowNewMiliseconds(function(){GetAndShowNewMilisecondsWithInterval();});                            
+    getAndShowNewMilisecondsWithInterval(function(){GetAndShowNewMilisecondsWithInterval();});                            
 
 }
 
@@ -211,7 +212,7 @@ startTimer(window.location);
     document.getElementById("miliseconds").innerHTML=numberMS; 
   }
 
-  function GetAndShowNewMilisecondsWithInterval(messageFunction){   
+  function getAndShowNewMilisecondsWithInterval(messageFunction){   
     numberMS=10;                           
     intervalid2=setInterval(
       messageFunction,
