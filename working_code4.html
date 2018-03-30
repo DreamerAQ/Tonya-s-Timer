@@ -6,13 +6,13 @@
   <div id='minutes'>00</div>:<div id="seconds">00</div>:<div id="miliseconds">0</div>
 </div> 
 <p>Для запуску таймера натисніть на кнопочку</p>
-<button id="stoptime" onclick="JavaScript:performTimer(80);">1 хв 20 сек</button>
-<button id="stoptime" onclick="JavaScript:performTimer(120)">2 хв</button>
-<button id="stoptime" onclick="JavaScript:performTimer(180)">3 хв</button>
+<button id="stoptime" onclick="JavaScript:setColorsgetNumbersAndShowThem(80);">1 хв 20 сек</button>
+<button id="stoptime" onclick="JavaScript:setColorsgetNumbersAndShowThem(120)">2 хв</button>
+<button id="stoptime" onclick="JavaScript:setColorsgetNumbersAndShowThem(180)">3 хв</button>
 <p>Або введіть кількість секунд на свій смак:</p>
 
 <input id="mySeconds" value="30">
-<button id="defineTime" onclick="JavaScript:performTimer(mySeconds.value)">Cтарт</button>
+<button id="defineTime" onclick="JavaScript:setColorsgetNumbersAndShowThem(mySeconds.value)">Cтарт</button>
 
 <style>
  #timer div{
@@ -79,10 +79,10 @@ input {
 // ThrowsStopWhenQueryStringTimeGreaterThan100();
 // ThrowsStopWhenQueryStringTimeIsNaN();
 
-var timeNumber; initialiazes global variable timeNumber 
-var numberSeconds; initialiazes global variable numberSeconds 
-var numberMinutes; initialiazes global variable numberMinutes 
-var intervalid1; initialiazes global variable intervalid1 
+var timeNumber;  
+var numberSeconds; 
+var numberMinutes; 
+var intervalid1; 
   
 var intervalid2;
 
@@ -180,7 +180,7 @@ function getNewNumberOfMinutesAndSecondsDiclinedOnOneAndShowIt() {
     document.getElementById('minutes').innerHTML = '0' + numberMinutes; 
     document.getElementById('seconds').innerHTML = timeNumber;          
     clearInterval(intervalid2);                                        
-    getAndShowNewMilisecondsWithInterval(function(){GetAndShowNewMilisecondsWithInterval();});                            
+    getAndShowNewMilisecondsWithInterval(function(){getNewNumberOfMilisecondsDiclinedOnOneAndShowIt();});                            
 
 }
 
@@ -200,7 +200,7 @@ function sound(time, frequency, type) {
     }, time || 200);
 
 }
-startTimer(window.location);  
+setColorsgetNumbersAndShowThem(window.location);  
 
 //1.gets number of miliseconds diclined by one
 //2.shows new number of miliseconds in browser
