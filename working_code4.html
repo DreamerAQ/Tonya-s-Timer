@@ -3,21 +3,18 @@
  </head>
 <body id="page">
 <div id="timer">
-  <div id='minutes'>00</div>:<div id="seconds">00</div>:<div id="miliseconds">0</div>
+ 00:00:0
 </div> 
 <p>Для запуску таймера натисніть на кнопочку</p>
-<button id="stoptime" onclick="JavaScript:setColorsgetNumbersAndShowThem(80);">1 хв 20 сек</button>
-<button id="stoptime" onclick="JavaScript:setColorsgetNumbersAndShowThem(120)">2 хв</button>
-<button id="stoptime" onclick="JavaScript:setColorsgetNumbersAndShowThem(180)">3 хв</button>
+<button id="stoptime" onclick="JavaScript:setColorsGetTotalMilisecondsAndShowTime(80);">1 хв 20 сек</button>
+<button id="stoptime" onclick="JavaScript:setColorsGetTotalMilisecondsAndShowTime(120)">2 хв</button>
+<button id="stoptime" onclick="JavaScript:setColorsGetTotalMilisecondsAndShowTime(180)">3 хв</button>
 <p>Або введіть кількість секунд на свій смак:</p>
 
 <input id="mySeconds" value="30">
-<button id="defineTime" onclick="JavaScript:setColorsgetNumbersAndShowThem(mySeconds.value)">Cтарт</button>
+<button id="defineTime" onclick="JavaScript:setColorsGetTotalMilisecondsAndShowTime(mySeconds.value)">Cтарт</button>
 
 <style>
- #timer div{
-display: inline;
-}
 #timer{
 font-size: 100px;
 text-align: center;
@@ -79,32 +76,25 @@ input {
 // ThrowsStopWhenQueryStringTimeGreaterThan100();
 // ThrowsStopWhenQueryStringTimeIsNaN();
 
-var timeNumber;  
-var numberSeconds; 
-var numberMinutes; 
-var intervalid1; 
-  
-var intervalid2;
 
-var numberMS;
+var intervalid; 
+var totalMiliseconds;  
 
-
-function getAndShowNewMinutesAndSecondsWithInterval(timerFunction) {
-    intervalid1=setInterval(
+function getAndShowCurrentTimeWithInterval(timerFunction) {
+    intervalid=setInterval(
         timerFunction,
-        1000
+        100
     );
 }
 
 
-//starts timer
-function setColorsgetNumbersAndShowThem(input) {
-    clearInterval(intervalid1);  
+function setColorsGetTotalMilisecondsAndShowTime(input) {
+    clearInterval(intervalid);  
     setInitialColors();   
-    getNumbersOfMinutesAndSeconds();            
-    function getNumbersOfMinutesAndSeconds() {      //1. crunches user's request of time - clears it from unnecessary symbols   
-    var time;                                       //2. transforms it into number of seconds  
-    var query;                                      //3. gets number of minutes
+    getTotalMiliseconds();            
+    function getTotalMiliseconds() {        
+    var time;                                       
+    var query;                                  
     var regex = /\\?time=(\d{1,3})/i; 
     var inputType=typeof input;       
     if (inputType=="number"){        
@@ -126,14 +116,12 @@ function setColorsgetNumbersAndShowThem(input) {
       throw "stop";
     }
       };
-   numberMinutes = Math.floor(time / 60);        
-    numberSeconds = (time - numberMinutes * 60) + 1; 
-    timeNumber = numberSeconds;                       
+   totalMiliseconds=time*1000;                   
 }
-    getAndShowNewMinutesAndSecondsWithInterval(function() {                          
-        getNewNumberOfMinutesAndSecondsDiclinedOnOneAndShowIt();
+  getAndShowCurrentTimeWithInterval(function() {                          
+        getFormatedTimeDiclinedOnOneAndShowIt();
     });
-}
+   }
 
 function notifyUserByColorEffectsTimerIsCloseToFinish(){
           document.getElementById('page').style.backgroundColor = '#015965';
@@ -144,45 +132,35 @@ function notifyUserByColorEffectsTimerIsCloseToFinish(){
           document.getElementById('timer').style.color = '#015965';
         
     }
-//diclines number of seconds on one and makes visual and audial effects
-//shows numbers of minutes and seconds in browser
-//stops previous timer of miliseconds
-//starts new timer of miliseconds
-function getNewNumberOfMinutesAndSecondsDiclinedOnOneAndShowIt() {
-    timeNumber--;                
-    if (timeNumber < 0) {        
-        if (numberMinutes > 0) { 
-            timeNumber = 59;     
-            numberMinutes--; 
-        } else {                  
-            return false;
-        }
-    };
 
-    if (timeNumber < 10) {             
-        timeNumber = "0" + timeNumber;  
-    };
-
-    if (timeNumber < 6 & timeNumber > 0) {  
-        if (numberMinutes == 0) {           
-            sound();                        
-        }
-    };
-    if (timeNumber == 5) {                 
-        if (numberMinutes == 0) {         
-            notifyUserByColorEffectsTimerIsCloseToFinish();                
-        }
-    };
-    if (timeNumber == 0 & numberMinutes == 0) {  
-          sound(1500);                           
-    };
-
-    document.getElementById('minutes').innerHTML = '0' + numberMinutes; 
-    document.getElementById('seconds').innerHTML = timeNumber;          
-    clearInterval(intervalid2);                                        
-    getAndShowNewMilisecondsWithInterval(function(){getNewNumberOfMilisecondsDiclinedOnOneAndShowIt();});                            
-
+function getFormmatedTime(totalMiliseconds){
+  var minutes = Math.floor(totalMiliseconds / 60000);
+  var seconds = Math.floor((totalMiliseconds - minutes * 60000) / 1000);
+  var miliseconds = Math.floor((totalMiliseconds - minutes * 60000 - seconds*1000) / 100);
+  if (totalMiliseconds <0){
+    throw "stop";
+  };
+  if (totalMiliseconds == 5000 || totalMiliseconds == 4000 || totalMiliseconds == 3000 || totalMiliseconds == 2000 || totalMiliseconds == 1000){
+  sound();
+  };
+  if (totalMiliseconds == 5000){
+    notifyUserByColorEffectsTimerIsCloseToFinish();
+  };
+ if (totalMiliseconds == 0){
+  sound(1500);
+ };
+ minutes = minutes <=9 ?('0'+minutes):minutes;
+  seconds = seconds <=9 ?('0'+seconds):seconds;
+  return minutes + ':' + seconds + ':' + miliseconds;
 }
+function showCurrentTime(totalMiliseconds){
+  document.getElementById('timer').innerHTML = getFormmatedTime(totalMiliseconds);
+}
+
+function getFormatedTimeDiclinedOnOneAndShowIt() {
+    totalMiliseconds=totalMiliseconds-100;      
+    showCurrentTime(totalMiliseconds);
+    }
 
 function sound(time, frequency, type) {
     var context = window.audioctx || (window.audioctx = new AudioContext());
@@ -200,25 +178,7 @@ function sound(time, frequency, type) {
     }, time || 200);
 
 }
-setColorsgetNumbersAndShowThem(window.location);  
-
-//1.gets number of miliseconds diclined by one
-//2.shows new number of miliseconds in browser
-  function getNewNumberOfMilisecondsDiclinedOnOneAndShowIt(){
-    numberMS--;             
-    if (numberMS<0){        
-      return false;        
-    };
-    document.getElementById("miliseconds").innerHTML=numberMS; 
-  }
-
-  function getAndShowNewMilisecondsWithInterval(messageFunction){   
-    numberMS=10;                           
-    intervalid2=setInterval(
-      messageFunction,
-      100
-      );
-  }
+ setColorsGetTotalMilisecondsAndShowTime(window.location);  
 
 
 /*function ReturnsANumberWhenQueryStringTimeIs0_100() {
