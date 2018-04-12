@@ -76,10 +76,8 @@ input {
 // ThrowsStopWhenQueryStringTimeGreaterThan100();
 // ThrowsStopWhenQueryStringTimeIsNaN();
 
-
 var intervalid; 
  
-
 function showCurrentTimeWithInterval(timerFunction) {
     intervalid=setInterval(
         timerFunction,
@@ -87,13 +85,36 @@ function showCurrentTimeWithInterval(timerFunction) {
     );
 }
 
+function startProcessOfTimerUpdate(){
+    showCurrentTimeWithInterval(function() {                           
+        updateTime(crunchUsersRequestToNumberOfTotalMiliseconds());}
+        );
+    
+  }
 
 function startTimer(input) {
-    var totalMiliseconds;
+    initTimer();
+    startProcessOfTimerUpdate(input);
+   }
+
+function initTimer(){
     clearInterval(intervalid);  
     setInitialColors();   
-    crunchUsersRequestToNumberOfTotalMilisecond();            
-    function crunchUsersRequestToNumberOfTotalMilisecond() {        
+}
+
+function updateTime(totalMiliseconds){
+  controlTimer(totalMiliseconds);
+  notifyUserIfNeeded(totalMiliseconds);
+  showCurrentTime(totalMiliseconds);
+}
+
+function controlTimer(totalMiliseconds){
+if (totalMiliseconds < 0){
+    throw "stop";
+  };
+}
+
+function crunchUsersRequestToNumberOfTotalMiliseconds(input) {        
     var time;                                       
     var query;                                  
     var regex = /\\?time=(\d{1,3})/i; 
@@ -117,26 +138,8 @@ function startTimer(input) {
       throw "stop";
     }
       };
-   totalMiliseconds=time*1000;           
+   return time*1000;           
 }
-  showCurrentTimeWithInterval(function() {                           
-        updateTime(totalMiliseconds=totalMiliseconds-100);
-    });
-   }
-
-function updateTime(totalMiliseconds){
-   
-  controlTimer(totalMiliseconds);
-  notifyUserIfNeeded(totalMiliseconds);
-  showCurrentTime(totalMiliseconds);
-}
-
-function controlTimer(totalMiliseconds){
-if (totalMiliseconds < 0){
-    throw "stop";
-  };
-}
-
 function notifyUserIfNeeded(totalMiliseconds){
   if (totalMiliseconds == 5000 || totalMiliseconds == 4000 || totalMiliseconds == 3000 || totalMiliseconds == 2000 || totalMiliseconds == 1000){
   sound();
