@@ -14,13 +14,13 @@
 <input id="mySeconds" value="25">
 <button id="defineTime" onclick="JavaScript:startTimer(mySeconds.value)">Cтарт</button>
 <p>Або введіть в рядку адреси текст: http://studypolish.today/studypolish.today/working_code4.html?time= та кількість секунд. </p>
-<button id="openModal" onclick="JavaScript:openModal()">Новий відлік</button>
+<button id="openModalButton" >Новий відлік</button>
 <div id="newModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="JavaScript:closeModal()">&times;</span>
+    <span class="close" id="closeModal" >&times;</span>
     <p>Введіть кількість секунд та натисніть кнопку "Старт":</p>
     <input id="mySecondsModal" value="25">
-<button id="defineTimeInModal" class="close" onclick="JavaScript:closeModal(),startTimer(mySecondsModal.value)">Cтарт</button>
+<button id="defineTimeInModal" class="close">Cтарт</button>
   </div>
 </div>
 <style>
@@ -118,6 +118,39 @@ input {
 // ReturnsANumberWhenQueryStringTimeIs0_100();
 // ThrowsStopWhenQueryStringTimeGreaterThan100();
 // ThrowsStopWhenQueryStringTimeIsNaN();
+function showStartTimerModalWindowOnOpenButtonClicked(){
+	document.getElementById('openModalButton').onclick = function(e){
+		openModal();
+		e.stopPropagation();
+	}
+}
+showStartTimerModalWindowOnOpenButtonClicked();
+
+function runStartTimerOnDefineTimeInModalButtonClicked(){
+  document.getElementById('defineTimeInModal').onclick = function(e){
+     startTimer(mySecondsModal.value);
+      e.stopPropagation();
+    closeModal();
+  }
+}
+runStartTimerOnDefineTimeInModalButtonClicked();
+
+function closeModalWindowOnCloseModalSpanClicked(){
+  document.getElementById('closeModal').onclick = function(e){
+    closeModal();
+    e.stopPropagation();
+  }
+ }
+closeModalWindowOnCloseModalSpanClicked();
+
+
+var modal = document.getElementById('newModal');
+function openModal() {
+    modal.style.display = "block";  
+}
+function closeModal() {
+    modal.style.display = "none";
+}
 
 var intervalid; 
  
@@ -245,31 +278,7 @@ function sound(time, frequency, type) {
 }
  startTimer(window.location);  
 
-showModalWindow(callback){
-  /*
-    displays modal window
-    when 'Start' button is pressed callback is called with specified startTime
-    example: buttonElement.onclick = function(){callback(document.getElementById('startTime'));}
-  */
-  
-}
 
-showModalWindow(function(startTime){
-  startTimer(startTime);
-});
-
-var modal = document.getElementById('newModal');
-function openModal() {
-    modal.style.display = "block";
-}
-function closeModal() {
-    modal.style.display = "none";
-}
-window.onclick = function(event) {
-    if (event.target != modal) {
-        modal.style.display = "none";
-    }
-}
 
 /*function ReturnsANumberWhenQueryStringTimeIs0_100() {
     try {
